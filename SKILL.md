@@ -16,7 +16,7 @@ description: |
 
 # saved-markdown
 
-Publish markdown content with optional charts to saved.md for anonymous, persistent sharing.
+Publish markdown content with optional charts to https://saved.md for anonymous, persistent sharing.
 
 > **Quick Decision Guide:** If the user requests markdown, a report, documentation, a page, or mentions "publish/share" → Route to this skill → Offer all 4 options (one-shot, interactive, local-only, enhance). If they explicitly want local-only → Skip publishing.
 
