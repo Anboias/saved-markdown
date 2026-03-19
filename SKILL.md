@@ -27,7 +27,7 @@ Publish Markdown/HTML/Slides content with optional charts to https://saved.md fo
 ## Required Agent Skills
 If the user requests slides/a deck/a presentation:
 - Ensure `frontend-slides` is installed.
-- Use `saved-markdown/slides/` as the place to add slide-specific reference
+- Use `saved-markdown/references/slides/` as the place to add slide-specific reference
   files later; for now, slide scaffolding is delegated to `frontend-slides`.
 - Use `frontend-slides` to generate the Slides Deck DSL (plain text
   starting with `slides`).
@@ -216,6 +216,11 @@ Rules:
 - One chart per `markdown-ui-widget` block
 - Always include `title:`
 - Data is CSV — first row is the header
+- **Values must be plain numbers** — no shorthand suffixes like `B`, `M`, `K`, `%`, `$`, or unit symbols. The renderer only parses raw numeric values (integers or decimals). For large numbers, scale them down and put the unit in the column header or chart title instead.
+  - ❌ `2015,3.56B` — renderer cannot parse `3.56B`
+  - ✅ `2015,3.56` with header `Year,Revenue (Billion RON)`
+  - ❌ `"US East",1.2M` — renderer cannot parse `1.2M`
+  - ✅ `"US East",1200` with header `Region,Revenue ($K)`
 - Quote any label containing spaces
 - Prefer 5–12 data rows for readability
 - For comparisons, include 2+ series in line/bar charts
@@ -360,6 +365,36 @@ def log_entry(id, url, deletePhrase, title, contentType, sizeBytes):
 3. **POST to API** using JSON format (properly escaped)
 4. **Log the entry** to `entries.json`
 5. **Return URL + deletePhrase** to user
+
+---
+
+## HTML Generation Preferences (User Profile)
+
+When generating HTML for saved.md, apply these styling preferences learned from user feedback:
+
+### Spacing (Balanced Density)
+- **Goal:** Dense but breathable — no massive gaps, no overlapping/cramped content
+- **Container:** Single container, everything inside, `max-width: 1100px`, `padding: 1rem`
+- **Section headers:** `margin: 1.25rem 0 0.75rem` — enough breathing room
+- **Content blocks:** `margin: 0.75rem 0` — consistent small gaps
+- **Grids:** `gap: 0.75rem` — tight but not touching
+- **Cards:** `padding: 0.75rem` — compact but readable
+- **CTA/Footer:** Proper spacing `padding: 1.5rem`, `margin: 1.5rem 0 0.5rem` — visually separated
+- **NO elements outside container** — prevents weird margin issues
+- **NO overlap** — ensure adequate vertical rhythm
+- Balance: Information-dense like a dashboard, but each section clearly defined
+
+### Layout
+- Dense, information-rich layout preferred
+- Reduce vertical rhythm (line-height: 1.5-1.6, not 1.8)
+- Compact cards with tighter internal spacing
+- Min-height for hero: `60vh` (not 80-100vh)
+
+### Interactivity Constraints
+- **NO interactive elements** except for actual links that navigate to other pages
+- Do NOT include: hamburger menus, clickable cards, hover-triggered actions, buttons that don't link
+- Only interactivity allowed: `<a>` tags with `href` attributes
+- Static design preferred — focus on content presentation, not UI interactions
 
 ### Enhance Mode Workflow
 1. **Receive existing markdown** from user or context
