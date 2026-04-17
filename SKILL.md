@@ -183,3 +183,37 @@ Template guide: `templates/validation.md`
 
 ```bash
 python scripts/publish.py --file <path> --content-type <markdown|html|jsx> --title "<title>"
+```
+
+### Direct API contract (source-of-truth behavior)
+
+Use `POST https://saved.md/api/pages` with JSON.
+
+Required/expected payload fields:
+
+- `markdown` (string): page source body for markdown, html, or jsx pages
+- `contentType` (string): `"markdown"`, `"html"`, or `"jsx"`
+
+Example payload:
+
+```json
+{
+  "markdown": "# My Page\n\nPublished from skill",
+  "contentType": "markdown"
+}
+```
+
+For markdown pages, `contentType` may be omitted, but setting it explicitly is
+recommended for consistency.
+
+### Remixing an existing page (immutable URLs)
+
+When users request edits to an existing saved.md URL:
+
+1. Parse page id from URL
+2. `GET /api/pages/{id}` and read `markdown` + `contentType`
+3. Apply requested edits to the returned `markdown`
+4. `POST /api/pages` using the edited `markdown` and the same `contentType`
+5. Return the **new** URL (old URL remains unchanged)
+
+Never imply in-place updates are possible.
